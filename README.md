@@ -34,6 +34,18 @@ To monitor the state of a device, use the following command:
 To configure :
 ```bash
 poetry run ppl configure <ip_address> <config_file>.json
+````
+To Run "ppl" commands there might be some warning to clear those:
+Inside container run:
+```bash
+poetry install
+poetry lock
+````
+After this there will be no warning in current container, we can make use of this container by noting down its name or it container ID, in this way the warning doesnt come in future.
 
+To Run Known Container:
+```bash
+docker start "container_ID"
+docker exec -it "container_ID" /bin/bash
 
 
