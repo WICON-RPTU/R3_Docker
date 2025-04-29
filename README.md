@@ -29,8 +29,9 @@ To monitor the state of a device, use the following command:
 
   ```bash
   poetry run r3erci <ip_address> state
-To configure :
 
+To configure :
+```bash
 poetry run ppl configure <ip_address> <config_file>.json
 
 
