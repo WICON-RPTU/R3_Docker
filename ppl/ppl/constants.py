@@ -1,0 +1,6 @@
+CLIENTPORT = 15000
+SERVERPORT = 7500
+MULTICAST_PORT = 15500
+SCHEMAPATH = "./ppl/schema/ppl_schema.json"
+SCHEMAPATHWHEEL = "./schema/ppl_schema.json"
+HEADERSIZE = 7

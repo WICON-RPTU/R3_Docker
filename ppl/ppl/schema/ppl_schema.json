@@ -1,0 +1,461 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PyRTMF Protocol Library",
+  "description": "Description of the PyRTMF Protocol Library Input file format.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "device",
+    "networks",
+    "version"
+  ],
+  "properties": {
+    "device": {
+      "$ref": "#/$defs/DeviceConfiguration"
+    },
+    "networks": {
+      "$ref": "#/$defs/Networks"
+    },
+    "version": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "LlcConfiguration": {
+      "type": "object",
+      "properties": {
+        "mcgroup": {
+          "type": "string",
+          "format": "ipv4",
+          "default": "225.224.223.0"
+        },
+        "mcport": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "default": 32145
+        },
+        "priorityFilters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PriorityFilters"
+          },
+          "minItems": 1,
+          "maxItems": 16
+        },
+        "routes": {
+          "description": "LUT list of network devices that are reachable via this individual EREB. Ensure to set respective LUT entries on all other devices too. Every data packet coming from the ETH/application for which no LUT entry exists is broadcasted via ER, potentially with a lower success probability.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RouteEntry"
+          },
+          "minItems": 1,
+          "maxItems": 200,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "MacConfiguration": {
+      "description": "The MAC configuration must be rolled out identically on all devices that should form a network. If not, extremely unreliable behavior results.",
+      "type": "object",
+      "properties": {
+        "networkAddress": {
+          "description": "The address of the network, which must be unique in the setup",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 239
+        },
+        "latency": {
+          "description": "Latency after which a high priority packet will be treated as low priority (in ms)",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2000000
+        },
+        "payloadSize": {
+          "description": "Payload size (in Byte). Larger packets will be fragmented and reassembled",
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 1500
+        },
+        "configOptimization": {
+          "description": "Instructs the MAC to either use the exact configuration as requested, or even try to optimize - in which case you should refer to the answer to check what is actually set",
+          "type": "string",
+          "enum": [
+            "EXACT",
+            "STATIONSMAX",
+            "LATENCYMIN",
+            "RELIABILITYMAX",
+            "PACKETLENMAX"
+          ]
+        },
+        "stationCount": {
+          "description": "Number of stations",
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 20
+        },
+        "reliability": {
+          "description": "Describes the degree of reliability",
+          "type": "string",
+          "enum": [
+            "NONE",
+            "LOW",
+            "MODERATE",
+            "MEDIUM",
+            "NORMAL",
+            "ADVANCED",
+            "HIGH",
+            "CRITICAL",
+            "EXTREME"
+          ]
+        },
+        "totalPTT": {
+          "description": "Total number of packet transmission slots, distributed un/equally among all stations",
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 100
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "allowRelaying": {
+              "description": "Enables/disables relaying",
+              "type": "boolean"
+            },
+            "allowHandover": {
+              "description": "Enables/disables latency-aware handover",
+              "type": "boolean"
+            },
+            "allowBcRep": {
+              "description": "Enables/disables repetition of broadcast packets",
+              "type": "boolean"
+            },
+            "allowFreqHop": {
+              "description": "Not supported",
+              "type": "boolean"
+            },
+            "allowLogging": {
+              "description": "Not supported",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "allowRelaying",
+            "allowHandover",
+            "allowBcRep"
+          ],
+          "additionalProperties": false
+        },
+        "securityMode": {
+          "description": "Currently not supported",
+          "type": "string",
+          "enum": [
+            "DISABLED",
+            "HEADERONLY",
+            "EVERYTHING"
+          ]
+        },
+        "ttrt": {
+          "description": "Output parameter of actual Target Token Rotation Time (in ms). If multiple TTRTs fit into latency, then the data packets has multiple TX and relay attempts",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000,
+          "default": 0
+        },
+        "dataRate": {
+          "description": "Output or input parameter of data rate (in kbit/s). Depending on optimization type this serves only as output, or as (minimum) input requirement.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535,
+          "default": 0
+        },
+        "comment": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "networkAddress",
+        "latency",
+        "payloadSize",
+        "configOptimization",
+        "stationCount",
+        "reliability",
+        "totalPTT",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "StationConfiguration": {
+      "description": "The MAC-related station configuration. This should be made specific to the actual station.",
+      "type": "object",
+      "properties": {
+        "macAddress": {
+          "description": "The ER MAC address. ER is defined to only use the last byte, yet it must uniquely identify an EREB in your setup. Forbidden IDs are `0x00`, `0xF0`, and `0xFF`.",
+          "$ref": "#/$defs/MacAddress"
+        },
+        "stationPTT": {
+          "description": "Number of packet transmission slots assigned to this one station. Mind that all stationPTT must not exceed the totalPTT count for that network",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 50
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "isExtRelay": {
+              "description": "Specifies external relay functionality (i.e. a relay that does not have own data to rx/tx, hence saves on PTT count and TTRT)",
+              "type": "boolean"
+            },
+            "isStatic": {
+              "description": "Specifies if station is static. It is also `true` in case of no handover",
+              "type": "boolean",
+              "default": true
+            },
+            "isAnchor": {
+              "description": "Specifies if station has backbone connectivity. In case of handover, only Anchors can start a network",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "isExtRelay",
+            "isStatic",
+            "isAnchor"
+          ],
+          "additionalProperties": false
+        },
+        "queueSizes": {
+          "description": "Specifies how the MAC should distribute its precious buffers among the different priorities. If not set, the MAC distributes the buffers equally. The position in the array defines the priority level, e.g. first position is PRIO1. The last position is Best-Effort traffic. EchoRing requires at least two entries (high-prio and best-effort). Be careful to assign buffers to all specified priorities (see PriorityFilters) and not demand too many buffers in total.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 30
+          },
+          "minItems": 2,
+          "maxItems": 5,
+          "uniqueItems": false
+        },
+        "comment": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "macAddress",
+        "stationPTT",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "SubnetworkConfiguration": {
+      "description": "List of all channels over which the Network is distributed. In case you have multiple subnetworks, consider allowing Handover in `macConfiguration`",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "subnetAddress": {
+            "description": "The address of the network, which must be unique in the setup",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 239
+          },
+          "channel": {
+            "description": "Channel index to be used, following the WiFi channel naming convention. Only 20MHz channels are supported",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 177
+          },
+          "txPower": {
+            "description": "TX power (in dBm). Set according to the regulations in the specific band and channel. Config may be rejected if allowed limits are exceeded",
+            "type": "number",
+            "multipleOf": 0.25,
+            "minimum": -10.0,
+            "maximum": 30.0
+          },
+          "comment": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "subnetAddress",
+          "channel",
+          "txPower"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 3,
+      "uniqueItems": true
+    },
+    "NetworkConfiguration": {
+      "description": "Description of single Network on LLC and MAC layer. Its name specifies the slot it is loaded into on the device.",
+      "type": "object",
+      "properties": {
+        "llcConfiguration": {
+          "$ref": "#/$defs/LlcConfiguration"
+        },
+        "macConfiguration": {
+          "$ref": "#/$defs/MacConfiguration"
+        },
+        "stationConfiguration": {
+          "$ref": "#/$defs/StationConfiguration"
+        },
+        "subnetConfiguration": {
+          "$ref": "#/$defs/SubnetworkConfiguration"
+        },
+        "comment": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "macConfiguration",
+        "stationConfiguration",
+        "subnetConfiguration"
+      ],
+      "additionalProperties": false
+    },
+    "Networks": {
+      "description": "List of all Network configurations, for which each contains at least one sub-network. The name specifies the config slot ID this network config should be stored in (allowed 1-20).",
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^([1-9]|1\\d|20)$"
+      },
+      "patternProperties": {
+        ".*": {
+          "$ref": "#/$defs/NetworkConfiguration"
+        }
+      },
+      "minProperties": 1,
+      "maxProperties": 20,
+      "additionalProperties": false
+    },
+    "PriorityFilters": {
+      "description": "On the device, you can specify certain traffic filter rules that allow for dropping a packet or assigning a priority for further transport through the wireless network. Up to five priority levels are available, of which the last used is always interpreted as 'best-effort' traffic. For each filter, you can define up to 16 patterns that have to be matched to apply a certain priority or drop (it starts by applying highest priority patterns first, then lower, then drop rule patterns). Also note its strong dependence with the `queueSizes` parameter in `macConfiguration`.",
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "pattern": "^((DROP)|PRIO[1-5]{1})$"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PriorityFilterRule"
+          },
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "action",
+        "rules"
+      ],
+      "additionalProperties": false
+    },
+    "PriorityFilterRule": {
+      "type": "object",
+      "properties": {
+        "pos": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "val": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "comment": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "pos",
+        "val"
+      ],
+      "additionalProperties": false
+    },
+    "MacAddress": {
+      "type": "string",
+      "pattern": "^([a-fA-F0-9]{2}:){5}[a-fA-F0-9]{2}$"
+    },
+    "RouteEntry": {
+      "type": "object",
+      "properties": {
+        "macAddress": {
+          "description": "The ER MAC address. ER is defined to only use the last byte, yet it must uniquely identify an EREB in your setup. In case of Handover, the group MAC address of all Anchor devices in the last byte should be: `0xF0`. Otherwise forbidden IDs are `0x00` and `0xFF`.",
+          "$ref": "#/$defs/MacAddress"
+        },
+        "extAddress": {
+          "description": "The ETH MAC address of the device that is accessible through this individual or group ER MAC address.",
+          "$ref": "#/$defs/MacAddress"
+        },
+        "comment": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "macAddress",
+        "extAddress"
+      ],
+      "additionalProperties": false
+    },
+    "DeviceConfiguration": {
+      "description": "Configuration options of the device, independent of the Network configuration.",
+      "type": "object",
+      "properties": {
+        "useDhcp": {
+          "type": "boolean"
+        },
+        "ip": {
+          "description": "Device IP",
+          "type": "string",
+          "format": "ipv4"
+        },
+        "netmask": {
+          "type": "string",
+          "format": "ipv4"
+        },
+        "gateway": {
+          "type": "string",
+          "format": "ipv4"
+        },
+        "nameserver": {
+          "type": "string",
+          "format": "ipv4"
+        },
+        "timeserver": {
+          "type": "string",
+          "format": "ipv4"
+        },
+        "comment": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "useDhcp"
+      ],
+      "if": {
+        "properties": {
+          "useDhcp": {
+            "enum": [
+              false
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "useDhcp",
+          "ip",
+          "netmask",
+          "gateway",
+          "timeserver",
+          "nameserver"
+        ]
+      },
+      "additionalProperties": false
+    }
+  }
+}

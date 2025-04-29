@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "r3erci"
+version = "3.2.1"
+description = "External Runtime Control Interface"
+readme = "README.md"
+homepage = "https://gitlab.com/r3_group/rtos/r3erci/"
+repository = "https://gitlab.com/r3_group/rtos/r3erci/"
+authors = [
+    "Moksha Birk <moksha.birk@r3.group>",
+    "Georg Hoelger <georg.hoelger@r3.group>",
+    "Niels Karowski <niels.karowski@r3.group>",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.6.2,<4.0"
+jsonschema = "^4.23.0"
+[tool.poetry.dev-dependencies]
+pre-commit = "^2.16.0"
+pytest = "^6.2.5"
+pytest-asyncio = "^0.16.0"
+pytest-cov = "^3.0.0"
+colorama = "^0.4.4"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+r3erci = "r3erci.cli.run:main"
+r3erci-batch = "r3erci.cli.run_batch:main"
+r3erci-sequencer = "r3erci.cli.run_sequencer:main"
+r3erci-simulate-ereb = "r3erci.cli.run_simulate_ereb:main"

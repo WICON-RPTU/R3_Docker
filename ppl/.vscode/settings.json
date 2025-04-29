@@ -1,0 +1,17 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "/ppl*.json",
+                "!/ppl_schema.json"
+            ],
+            "url": "./ppl_schema.json"
+        },
+        {
+            "fileMatch": [
+                "/ppl_schema.json"
+            ],
+            "url": "https://json-schema.org/draft/2020-12/schema"
+        }
+    ]
+}

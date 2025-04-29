@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "ppl"
+version = "0.0.1"
+description = "pyrtmf protocol library"
+authors = ["Tobias Neubert <tobias.neubert@r3.group>"]
+include = [{ path = "ppl/schema/ppl_schema.json", format = ["sdist", "wheel"] }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+jsonschema = "4.23.0"
+r3erci = { path = "./r3erci", develop = true }
+
+[tool.poetry.group.dev.dependencies]
+scapy = "2.5.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+ppl = "ppl.cli.run:main"
+r3erci = "r3erci.cli.run:main"
+r3erci-batch = "r3erci.cli.run_batch:main"
+r3erci-sequencer = "r3erci.cli.run_sequencer:main"
+r3erci-simulate-ereb = "r3erci.cli.run_simulate_ereb:main"
