@@ -11,15 +11,16 @@ A containerized CLI solution for managing R3 Bridge E devices — enabling state
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/WICON-RPTU/Docker_R3Device_manager.git
+   git clone https://github.com/WICON-RPTU/R3_Docker.git
 
-2. Build the Docker image:
+2. Go to the Directory and build the Docker image:
    ```bash
-   docker build -t r3device_manager .
+   cd R3_Docker
+   docker build -t r3-app .
 
 3. Run the Container:
    ```bash
-   docker run -it r3device_manager
+   docker run -it r3-app
 ## Usage
 
 Once the container is running, you can interact with the CLI to manage R3 Bridge E devices. Below are the available commands:
