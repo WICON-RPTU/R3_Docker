@@ -47,5 +47,7 @@ To Run Known Container:
 ```bash
 docker start "container_ID"
 docker exec -it "container_ID" /bin/bash
-
-
+```
+To Check container ID or name use this:
+```bash
+docker ps -a
