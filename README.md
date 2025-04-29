@@ -3,8 +3,8 @@ A containerized CLI solution for managing R3 Bridge E devices — enabling state
 
 ## Features
 
-- **State Monitoring:** Monitors the state of R3 devices in real-time.
-- **Configuration Management:** Provides a CLI interface for managing configurations.
+- **State Monitoring:** Offers real-time visibility into the operational status of R3 devices.
+- **Configuration Management:** Facilitates efficient deployment and management of device configurations.
 - **Ring Operations:** Enables operations related to ring management of R3 devices.
 
 ## Installation
