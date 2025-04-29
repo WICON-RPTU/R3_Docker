@@ -36,7 +36,7 @@ To configure :
 poetry run ppl configure <ip_address> <config_file>.json
 ````
 To Run "ppl" commands there might be some warning to clear those:
-Inside container run:
+Inside the container run:
 ```bash
 poetry install
 poetry lock
