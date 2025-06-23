@@ -2,6 +2,7 @@ FROM python:3.11-slim
 
 # Install curl
 RUN apt-get update && apt-get install -y curl
+RUN pip3 install paho-mqtt
 
 # Install Poetry
 RUN curl -sSL https://install.python-poetry.org | python3 -
