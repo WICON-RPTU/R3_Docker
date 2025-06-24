@@ -1,0 +1,57 @@
+{
+  "device": {
+    "comment": "test",
+    "useDhcp": false,
+    "ip": "192.168.100.32",
+    "netmask": "255.255.255.0",
+    "gateway": "0.0.0.0",
+    "nameserver": "8.8.8.8",
+    "timeserver": "8.8.8.8"
+  },
+  "networks": {
+    "1": {
+      "llcConfiguration": {
+        "mcgroup": "225.224.223.0",
+        "mcport": 32145
+      },
+      "macConfiguration": {
+        "networkAddress": 22,
+        "latency": 30000,
+        "payloadSize": 150,
+        "stationCount": 5,
+        "totalPTT": 5,
+        "reliability": "ADVANCED",
+        "configOptimization": "RELIABILITYMAX",
+        "options": {
+          "allowBcRep": false,
+          "allowHandover": true,
+          "allowRelaying": true,
+          "allowFreqHop": true
+        }
+      },
+      "stationConfiguration": {
+        "comment": "Station at door",
+        "macAddress": "00:00:00:00:00:02",
+        "stationPTT": 1,
+        "options": {
+          "isAnchor": false,
+          "isStatic": true,
+          "isExtRelay": false
+        }
+      },
+      "subnetConfiguration": [
+        {
+          "subnetAddress": 1,
+          "channel": 1,
+          "txPower": 0
+        },
+        {
+          "subnetAddress": 2,
+          "channel": 1,
+          "txPower": 15
+        }
+      ]
+    }
+  },
+  "version": "v0.1.0"
+}
