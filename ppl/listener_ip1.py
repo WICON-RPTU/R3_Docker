@@ -1,11 +1,11 @@
-import paho.mqtt.client as mqtt
+ackimport paho.mqtt.client as mqtt
 import subprocess
 import os
 
 # MQTT Broker settings
 broker_address = "localhost"
 port = 1337
-topic = "/echoring"
+topic = "/echoringfeedback"
 ack_topic = "/ack"
 ip1 = '192.168.100.32' # Updated device IP
 # Directory where you want to run the command
