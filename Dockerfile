@@ -3,6 +3,7 @@ FROM python:3.11-slim
 # Install curl
 RUN apt-get update && apt-get install -y curl
 RUN apt update && apt install -y iputils-ping
+RUN apt update && apt install -y nano
 RUN pip3 install paho-mqtt
 
 # Install Poetry
