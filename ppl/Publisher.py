@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 
 # MQTT Broker settings
-broker_address = "10.0.3.5"  
+broker_address = "localhost"  
 port = 1337
 topic = "/echoring"
 ack_topic = "/ack"  
