@@ -3,7 +3,7 @@ import subprocess
 import os
 
 # MQTT Broker settings
-broker_address = "localhost"
+broker_address = "10.0.3.5"
 port = 1337
 topic = "/echoringfeedback"
 ack_topic = "/ack"
