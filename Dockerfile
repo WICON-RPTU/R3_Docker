@@ -1,5 +1,6 @@
 FROM python:3.11-slim
-
+FROM docker
+COPY --from=docker/buildx-bin /buildx /usr/libexec/docker/cli-plugins/docker-buildx
 # Install curl
 RUN apt-get update && apt-get install -y curl iputils-ping nano
 RUN pip3 install paho-mqtt
