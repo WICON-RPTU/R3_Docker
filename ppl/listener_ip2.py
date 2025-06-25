@@ -5,7 +5,7 @@ import os
 # MQTT Broker settings
 broker_address = "localhost"
 port = 1337
-topic = "/echoring"
+topic = "/echoringfeedback"
 ack_topic = "/ack"
 ip2 = '192.168.100.33' # Updated device IP
 # Directory where you want to run the command
