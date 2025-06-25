@@ -16,6 +16,8 @@ A containerized CLI solution for managing R3 Bridge E devices — enabling state
 2. Go to the Directory and build the Docker image:
    ```bash
    cd R3_Docker
+   sudo usermod -aG docker $USER
+   newgrp docker
    docker build -t r3-app .
 
 3. Run the Container:
