@@ -12,6 +12,8 @@ A containerized CLI solution for managing R3 Bridge E devices — enabling state
 1. Clone the repository:
    ```bash
    git clone https://github.com/WICON-RPTU/R3_Docker.git
+   sudo apt-get install -y ca-certificates curl gnupg lsb-release
+   sudo apt install docker.io
 
 2. Go to the Directory and build the Docker image:
    ```bash
