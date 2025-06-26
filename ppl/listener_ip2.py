@@ -21,12 +21,12 @@ def on_message(client, userdata, msg):
     payload = msg.payload.decode("utf-8")
     print(f"Received message: {payload}")
 
-    if payload == "ON":
+    if payload == "echoOn":
         command = f"poetry run r3erci {ip2} ring 2 1"
-    elif payload == "OFF":
+    elif payload == "echoOff":
         command = f"poetry run r3erci {ip2} ring 1 1"
     else:
-        print("Invalid payload. Expected 'ON' or 'OFF'.")
+        print("Invalid payload. Expected 'echoOn' or 'echoOff'.")
         return
 
     try:
@@ -36,9 +36,9 @@ def on_message(client, userdata, msg):
         stdout_output = result.stdout.decode("utf-8").strip()
         print(f"Command output: {stdout_output}")
         if "SUCCESS" in stdout_output:
-            ack_message = f"Tx_Power of {ip1} changed"
+            ack_message = f"Tx_Power of {ip2} changed"
         elif "no response in 10 seconds" in stdout_output.lower() or "raised error" in stdout_output.lower():
-            ack_message = f"Error: No response from {ip1}"
+            ack_message = f"Error: No response from {ip2}"
         else:
             ack_message = stdout_output
 
