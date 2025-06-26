@@ -1,4 +1,4 @@
-ackimport paho.mqtt.client as mqtt
+import paho.mqtt.client as mqtt
 import subprocess
 import os
 
@@ -21,12 +21,12 @@ def on_message(client, userdata, msg):
     payload = msg.payload.decode("utf-8")
     print(f"Received message: {payload}")
 
-    if payload == "ON":
+    if payload == "echoOn":
         command = f"poetry run r3erci {ip1} ring 2 1"
-    elif payload == "OFF":
+    elif payload == "echoOff":
         command = f"poetry run r3erci {ip1} ring 1 1"
     else:
-        print("Invalid payload. Expected 'ON' or 'OFF'.")
+        print("Invalid payload. Expected 'echoOn' or 'echoOff'.")
         return
 
     try:
