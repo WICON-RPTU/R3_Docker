@@ -35,7 +35,15 @@ To monitor the state of a device, use the following command:
   poetry run r3erci <ip_address> state
 ```
 ## 2. **Configuration**
-To configure :
+To Config the R3 Device into a certain Configuration;
+```bash
+poetry run r3erci <ip_address> config 1 1 1
+```
+To Start an EchoRing after Configuring:
+```bash
+poetry run r3erci <ip_address> start
+```
+To configure a json file :
 ```bash
 poetry run ppl configure <ip_address> <config_file>.json
 ````
